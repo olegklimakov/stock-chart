@@ -1,0 +1,51 @@
+<div class="container" #container *ngIf="internalChartParams">
+  {{yAxisYCoordinate}} {{xAxisTitleXCoordinate}} {{xAxisTitleYCoordinate}}
+  <svg
+    *ngIf="internalChartParams.viewInit"
+    [style.height.px]="internalChartParams.container.height"
+    [style.width.px]="internalChartParams.container.width"
+    version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="graph" aria-labelledby="title" role="img"
+  >
+    <title id="title">A line chart showing some information</title>
+    <g class="grid x-grid" id="xGrid">
+      <line
+        #xGridAxisLine
+        [attr.x1]="xAxisXCoordinate"
+        [attr.x2]="xAxisXCoordinate"
+        [attr.y1]="internalChartParams.axis.x.bottom"
+        [attr.y2]="internalChartParams.container.height"
+      ></line>
+    </g>
+    <g class="grid y-grid" id="yGrid">
+      <line
+        #yGridAxisLine
+        [attr.x1]="this.internalChartParams.axis.y.left"
+        [attr.x2]="this.internalChartParams.container.width"
+        [attr.y1]="yAxisYCoordinate"
+        [attr.y2]="yAxisYCoordinate"
+      ></line>
+    </g>
+    <g class="labels x-labels">
+      <text x="110" [attr.y]="xAxisTextYCoordinate">2008</text>
+      <text
+        [attr.x]="xAxisTitleXCoordinate"
+        [attr.y]="xAxisTitleYCoordinate"
+        class="label-title"
+      >Ticker</text>
+    </g>
+    <g class="labels y-labels">
+      <text
+        [attr.x]="internalChartParams.axis.y.labelsX"
+        [attr.y]="internalChartParams.axis.y.top"
+      >
+        {{internalChartParams.axis.y.max}}
+      </text>
+      <text x="50" y="200" class="label-title">Price</text>
+    </g>
+    <g class="data" data-setname="Our first data set">
+      <rect x="110" width="30" height="90" y="280"></rect>
+      <rect x="150" width="30" height="90" y="280"></rect>
+    </g>
+  </svg>
+</div>
+

@@ -28,6 +28,9 @@
     "client-e2e": {
       "tags": [],
       "implicitDependencies": ["client"]
+    },
+    "chart": {
+      "tags": []
     }
   }
 }

@@ -1,5 +1,23 @@
 # StockChart
 
+### Task: 
+ Фрэймворк: Angular 9                                                                                                                                                                                        
+
+•  Не используя готовые библиотеки графиков, используя публичное REST API сервиса  https://bittrex.github.io/api/v1-1,
+(для разработки нужно будет использовать прокси конфиг), построить гистограмму текущей рыночной стоимости для валютных пар USD-BTC, USD-BCH, USD-ETH, USD-BSV, USD-DASH, USD-ZEC, USD-LTC по умолчанию.
+
+•  Гистограмма должна быть реализована используя ангулар компоненты.
+
+•  Выпадающий список с остальными валютами где на каждом пункте мы увидим {{CryptoCurrency}} {{USDCryptoCurrencyPrice}}
+
+•  Нажатие на каждый пункт позволяет добавлять колонки на график или удалять.
+
+•  При каждом открытие выпадающего списка первыми мы видим выбранные валюты.
+
+•  Использовать NX  https://nx.dev/angular/tutorial/01-create-application 
+
+•  Тесты не обязательны
+
 This project was generated using [Nx](https://nx.dev).
 
 <p align="center"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
