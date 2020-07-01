@@ -25,7 +25,7 @@
         [attr.y2]="yAxisYCoordinate"
       ></line>
     </g>
-    <g class="labels x-labels">
+    <g class="labels x-labels" #xLabels>
       <text x="110" [attr.y]="xAxisTextYCoordinate">2008</text>
       <text
         [attr.x]="xAxisTitleXCoordinate"
@@ -33,13 +33,13 @@
         class="label-title"
       >Ticker</text>
     </g>
-    <g class="labels y-labels">
-      <text
-        [attr.x]="internalChartParams.axis.y.labelsX"
-        [attr.y]="internalChartParams.axis.y.top"
-      >
-        {{internalChartParams.axis.y.max}}
-      </text>
+    <g class="labels y-labels" #yLabels>
+<!--      <text-->
+<!--        [attr.x]="internalChartParams.axis.y.labelsX"-->
+<!--        [attr.y]="internalChartParams.axis.y.top"-->
+<!--      >-->
+<!--        {{internalChartParams.axis.y.max}}-->
+<!--      </text>-->
       <text x="50" y="200" class="label-title">Price</text>
     </g>
     <g class="data" data-setname="Our first data set">

@@ -5,7 +5,7 @@ import {
   Component,
   ElementRef,
   Input, OnDestroy,
-  OnInit,
+  OnInit, Renderer2,
   ViewChild
 } from '@angular/core';
 import { BarChartModel, ChartAxisSettings } from '../../models/bar-chart.model';
@@ -64,6 +64,7 @@ class InternalChartParams {
   viewInit = false;
   maxYValue: number;
   pixelsPerValueY: number;
+  lengthOfYAxis: number;
 
   constructor() {
     this.container = {
@@ -109,13 +110,12 @@ class InternalChartParams {
 export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
   private chartData: BarChartModel[];
   @ViewChild('container') elementView: ElementRef;
+  @ViewChild('yLabels') yLabels: ElementRef;
   @Input() set dataSet(data: BarChartModel[]) {
     this.chartData = data;
     console.log(data);
     this.internalChartParams.maxYValue = this.findMaxValueInArray(data);
     this.internalChartParams.axis.y.settings.maxValue = this.ceilToTens(this.internalChartParams.maxYValue);
-    this.internalChartParams.pixelsPerValueY = this.calculateValuesPerPixelY();
-    console.log(this.internalChartParams.pixelsPerValueY);
   };
 
   subscriptions: Subscription[] = []
@@ -123,7 +123,8 @@ export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
   internalChartParams: InternalChartParams = new InternalChartParams();
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private renderer: Renderer2
   ) { }
 
   ngOnInit(): void {
@@ -149,11 +150,42 @@ export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private drawChart() {
+    // if(!this.internalChartParams.viewInit) { return }
     const element = this.elementView.nativeElement;
     this.internalChartParams.init(element.offsetWidth, element.offsetHeight);
-    this.internalChartParams.pixelsPerValueY = this.calculateValuesPerPixelY();
+    this.internalChartParams.lengthOfYAxis = this.calculateLengthOfYAxis();
+    this.internalChartParams.pixelsPerValueY = this.calculateValuesPerPixelY(this.internalChartParams.lengthOfYAxis);
     console.log(this.internalChartParams.pixelsPerValueY);
     this.changeDetectorRef.detectChanges();
+    this.drawYTicks();
+    // this.changeDetectorRef.detectChanges();
+  }
+
+  private drawYTicks() {
+
+    /*
+    <text
+        [attr.x]="internalChartParams.axis.y.labelsX"
+        [attr.y]="internalChartParams.axis.y.top"
+      >
+        {{internalChartParams.axis.y.max}}
+      </text>
+     */
+    const modifier = this.internalChartParams.axis.y.max / this.internalChartParams.axis.y.ticksCount;
+    Array(this.internalChartParams.axis.y.ticksCount).fill(null).forEach((_, i) => {
+      const value = this.internalChartParams.axis.y.max - modifier * i
+      console.log(value);
+      const textElement = this.renderer.createElement('text', 'svg');
+      const textElementText = this.renderer.createText(value.toString(10));
+      this.renderer.setAttribute(textElement, 'x', this.internalChartParams.axis.y.labelsX.toString(10))
+      this.renderer.setAttribute(textElement, 'y', this.calculateYCoordinate(value).toString(10))
+      this.renderer.appendChild(textElement, textElementText);
+      this.renderer.appendChild(this.yLabels.nativeElement, textElement);
+    })
+  }
+
+  private calculateYCoordinate(value: number) {
+    return this.internalChartParams.lengthOfYAxis - this.internalChartParams.pixelsPerValueY * value + this.internalChartParams.axis.y.top;
   }
 
   findMaxValueInArray(array: BarChartModel[]) {
@@ -164,12 +196,13 @@ export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
     return Math.ceil(element / 10) * 10;
   }
 
-  calculateValuesPerPixelY() {
-    return this.internalChartParams.container.height /
-      (
-        // offset for bottom chart part (till 0y value) and top offset
-        this.internalChartParams.axis.y.max - this.yAxisYCoordinate + this.internalChartParams.axis.y.top
-      )
+  calculateLengthOfYAxis(): number {
+    // this.internalChartParams.container.height - this.yAxisYCoordinate + this.internalChartParams.axis.y.top
+    return this.internalChartParams.container.height - this.internalChartParams.axis.y.bottom - this.internalChartParams.axis.y.top
+  };
+
+  calculateValuesPerPixelY(yLength) {
+    return yLength  / this.internalChartParams.axis.y.max
   }
 
   // Method for calculate bottom y coordinate for chart;
