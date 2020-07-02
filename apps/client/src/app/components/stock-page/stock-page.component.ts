@@ -10,11 +10,11 @@ export class StockPageComponent implements OnInit {
   chartData: BarChartModel[] = [
     {
       value: 1000,
-      title: 'Some 345'
+      title: 'sh1'
     },
     {
       value: 1200,
-      title: 'Some 123'
+      title: 'sg12'
     },
     {
       value: 100,
