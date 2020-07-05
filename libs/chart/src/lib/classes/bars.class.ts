@@ -6,7 +6,7 @@ export class BarsClass {
   ) {}
 
   get width(): number {
-    return this.settings.width;
+    return this.settings.width || 0;
   }
 
   get color(): string {
@@ -14,6 +14,6 @@ export class BarsClass {
   }
 
   get titleOffset(): number {
-    return this.settings.titleOffset;
+    return this.settings.titleOffset || 0;
   }
 }

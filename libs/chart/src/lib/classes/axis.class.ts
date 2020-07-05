@@ -10,23 +10,23 @@ export class ChartAxis {
   }
 
   get left(): number {
-    return this.settings.leftOffset;
+    return this.settings.leftOffset || 0;
   }
 
   get right(): number {
-    return this.settings.rightOffset;
+    return this.settings.rightOffset || 0;
   }
 
   get bottom(): number {
-    return this.settings.bottomOffset;
+    return this.settings.bottomOffset || 0;
   }
 
   get top(): number {
-    return this.settings.topOffset;
+    return this.settings.topOffset || 0;
   }
 
   get max(): number {
-    return this.settings.maxValue;
+    return this.settings.maxValue || 0;
   }
 
   set max(data: number) {

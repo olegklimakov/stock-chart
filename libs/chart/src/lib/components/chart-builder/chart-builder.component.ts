@@ -32,8 +32,17 @@ export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('dataSet') dataSetElement: ElementRef;
 
   @Input() set dataSet(data: BarChartModel[]) {
-    this.chartData = data;
-    this.internalChartParams.setMaxChartData(data);
+    this.chartData = data || [];
+    this.internalChartParams.setMaxChartData(this.chartData);
+
+    if (this.internalChartParams.hasData) {
+      this.removeDrawnItems();
+      this.drawChart();
+    } else {
+      this.drawChart();
+    }
+
+    this.internalChartParams.hasData = true;
   };
 
   subscriptions: Subscription[] = []
@@ -54,7 +63,9 @@ export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.drawChart();
+    if(this.internalChartParams.hasData) {
+      this.drawChart();
+    }
   }
 
   private handleWindowResize() {
@@ -62,13 +73,16 @@ export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
       fromEvent(window, 'resize').pipe(
         debounceTime(500)
       ).subscribe(() => {
-        this.removeDrawnItems();
-        this.drawChart();
+        if(this.internalChartParams.hasData) {
+          this.removeDrawnItems();
+          this.drawChart();
+        }
       })
     )
   }
 
   private drawChart() {
+    if (!this.elementView?.nativeElement) { return }
     const element = this.elementView.nativeElement;
     this.internalChartParams.init(element.offsetWidth, element.offsetHeight);
     this.changeDetectorRef.detectChanges();
@@ -77,7 +91,7 @@ export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.drawBars();
   }
 
-  private drawYTicks() {
+  private drawYTicks(): void {
     const modifier = this.internalChartParams.axis.y.max / this.internalChartParams.axis.y.ticksCount;
     Array(this.internalChartParams.axis.y.ticksCount).fill(null).forEach((_, i) => {
       const value = this.internalChartParams.axis.y.max - modifier * i
@@ -92,7 +106,7 @@ export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
     })
   }
 
-  private drawXTicks() {
+  private drawXTicks(): void {
     const modifier = this.internalChartParams.lengthOfXAxis / this.chartData.length;
     this.chartData.forEach((item, i) => {
       const textElement = this.renderer.createElement('text', 'svg');
@@ -111,7 +125,7 @@ export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
     })
   }
 
-  private drawBars() {
+  private drawBars(): void {
     const modifier = this.internalChartParams.lengthOfXAxis / this.chartData.length;
     this.chartData.forEach((item, i) => {
       const container = this.renderer.createElement('g', 'svg');
@@ -124,7 +138,7 @@ export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
     })
   }
 
-  private createBarLine(xValue: number, item: BarChartModel) {
+  private createBarLine(xValue: number, item: BarChartModel): HTMLElement {
     const barElement = this.renderer.createElement('rect', 'svg');
     this.renderer.setAttribute(barElement, 'x', xValue.toString(10))
     this.renderer.setAttribute(barElement, 'y', this.internalChartParams.calculateYCoordinate(item.value).toString(10))
@@ -133,7 +147,7 @@ export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
     return barElement;
   }
 
-  private createBarLineText(xValue: number, item: BarChartModel) {
+  private createBarLineText(xValue: number, item: BarChartModel): HTMLElement {
     const textElement = this.renderer.createElement('text', 'svg');
     this.renderer.setAttribute(textElement, 'x', xValue.toString(10));
 
@@ -157,6 +171,7 @@ export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.internalChartParams.axis.x.left
   }
 
+  // For put labels to x axis -> it is not 0
   get xAxisTextYCoordinate(): number {
     return this.yAxisYCoordinate + this.internalChartParams.axisLabels.x.top;
   }
@@ -169,6 +184,7 @@ export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.internalChartParams.lengthOfXAxis - 50;
   }
 
+  // Put in center
   get xAxisTranslate(): string {
     return `translate(${this.internalChartParams.axis.x.left},0)`
   }
@@ -180,10 +196,8 @@ export class ChartBuilderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   removeChild(element) {
-    console.log(element.nativeElement);
     const el = element.nativeElement
-    while(el.firstChild) {
-      this.renderer.removeChild(el, el.lastChild);
-    }
+    // way from ang
+    el.textContent = '';
   }
 }

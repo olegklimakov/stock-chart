@@ -1,0 +1,8 @@
+{
+  "/api/*": {
+    "target": "https://api.bittrex.com/api/v1.1/public",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {"^/api" : ""}
+  }
+}

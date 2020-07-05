@@ -5,7 +5,6 @@
     [style.width.px]="internalChartParams.container.width"
     version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="graph" aria-labelledby="title" role="img"
   >
-    <title id="title">A line chart showing some information</title>
     <g class="grid x-grid" id="xGrid">
       <line
         #xGridAxisLine
@@ -36,7 +35,7 @@
     <g>
       <text transform="rotate(-90,30,200)" text-anchor="middle" x="10" y="200" class="label-title">Price</text>
     </g>
-    <g  [attr.transform]="xAxisTranslate" class="data" #dataSet data-setname="Our first data set">
+    <g  [attr.transform]="xAxisTranslate" class="data" #dataSet>
     </g>
   </svg>
 </div>

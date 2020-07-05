@@ -21,8 +21,14 @@
             "polyfills": "apps/client/src/polyfills.ts",
             "tsConfig": "apps/client/tsconfig.app.json",
             "aot": true,
-            "assets": ["apps/client/src/favicon.ico", "apps/client/src/assets"],
-            "styles": ["apps/client/src/styles.scss"],
+            "assets": [
+              "apps/client/src/favicon.ico",
+              "apps/client/src/assets"
+            ],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "apps/client/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -80,7 +86,10 @@
               "apps/client/tsconfig.app.json",
               "apps/client/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/client/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/client/**/*"
+            ]
           }
         },
         "test": {
@@ -115,8 +124,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/client-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/client-e2e/**/*"]
+            "tsConfig": [
+              "apps/client-e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/client-e2e/**/*"
+            ]
           }
         }
       }
@@ -134,7 +148,10 @@
               "libs/chart/tsconfig.lib.json",
               "libs/chart/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/chart/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/chart/**/*"
+            ]
           }
         },
         "test": {

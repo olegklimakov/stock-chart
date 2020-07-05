@@ -1,7 +1,7 @@
 import { ChartAxis } from './axis.class';
 import { ChartAxisLabels } from './axis-labels.class';
 import { BarsClass } from './bars.class';
-import { BarChartModel } from '../models/bar-chart.model';
+import { BarChartModel } from '@stock-chart/chart';
 
 export class InternalChartParams {
   container: {
@@ -22,6 +22,8 @@ export class InternalChartParams {
   bars: BarsClass
 
   viewInit = false;
+  hasData = false;
+
   maxYValue: number;
   pixelsPerValueY: number;
   lengthOfYAxis: number;
@@ -92,7 +94,7 @@ export class InternalChartParams {
   };
 
   private calculateValuesPerPixelY(yLength): number {
-    return yLength  / this.axis.y.max
+    return yLength / this.axis.y.max
   }
 
   init(width: number, height: number) {
@@ -105,7 +107,7 @@ export class InternalChartParams {
   reCalculateLengths() {
     this.lengthOfYAxis = this.calculateLengthOfYAxis();
     this.lengthOfXAxis = this.calculateLengthOfXAxis();
-    this.pixelsPerValueY = this.calculateValuesPerPixelY(this.lengthOfYAxis);
+    this.pixelsPerValueY = this.calculateValuesPerPixelY(this.lengthOfYAxis) || 0;
   }
 
   calculateYCoordinate(value: number) {
@@ -113,6 +115,8 @@ export class InternalChartParams {
   }
 
   calculateHeightForYInPX(value: number) {
+    // prevent empty chart errors
+    if(!value) { return 0 }
     return this.pixelsPerValueY * value;
   }
 }

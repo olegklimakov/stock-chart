@@ -1,1 +1,9 @@
+<mat-form-field class="select">
+  <mat-label>Stocks</mat-label>
+  <mat-select [formControl]="selectedStocksControl" multiple>
+    <mat-option *ngFor="let stock of stocks" [value]="stock.name">
+      {{stock}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
 <stock-chart-builder style="height: 500px" [dataSet]="chartData"></stock-chart-builder>
